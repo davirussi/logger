@@ -18,18 +18,18 @@ function findLine(inp){
 
   var sheet = SpreadsheetApp.getActiveSheet();
   //all values from collumn 
-  var Avals = sheet.getRange(inputType).getValues();
+  var aVals = sheet.getRange(inputType).getValues();
   //number of used lines
-  var Alast = Avals.filter(String).length;  
+  var last = Avals.filter(String).length;  
 
   var ui = SpreadsheetApp.getUi();
-  ui.alert(Alast);  
+  //ui.alert(Alast); 
+  return last;
 }
 
 //Locate the right collumn
 function findColumn(inp){
-  var out = typesColumns[types.indexOf(inp)];
-  return out;
+  return typesColumns[types.indexOf(inp)];
 }
  
 //Always knows the right things
@@ -100,7 +100,9 @@ function getattachment(){
 }
 
 function main(){
-  findLine(input);
+  data='23/23';
+  texto='0errors';
+  writer(input,data,texto);
 }
 
 /**
