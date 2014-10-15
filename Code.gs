@@ -78,10 +78,12 @@ function readRows() {
 };
 
 
+//get attachments, get contend of attached files, returning a vector with email subject and attached files as text
 function getattachment(){
    // Logs information about any attachments in the first 100 inbox threads.
-  var threads = GmailApp.getInboxThreads(0, 5);
+  var threads = GmailApp.getInboxThreads(0, 10);
   var msgs = GmailApp.getMessagesForThreads(threads);
+  var out = [];  
   for (var i = 0 ; i < msgs.length; i++) {
     if (msgs[i][0].isUnread()){
       for (var j = 0; j < msgs[i].length; j++) {
@@ -89,14 +91,16 @@ function getattachment(){
         for (var k = 0; k < attachments.length; k++) {
           Logger.log('Message "%s" contains the attachment "%s" (%s bytes)',
                      msgs[i][j].getSubject(), attachments[k].getName(), attachments[k].getDataAsString());
-          msgs[i][j].markRead();
+          //msgs[i][j].markRead();
+          out.push(msgs[i][j].getSubject());
+          out.push(attachments[k].getDataAsString());
         }
       }
     }
   }
-  var ui = SpreadsheetApp.getUi();
-  ui.alert(Logger.getLog());
-  
+  //var sheet = SpreadsheetApp.getActive();
+  //sheet.toast('toast', out);
+  return out;
 }
 
 function main(){
