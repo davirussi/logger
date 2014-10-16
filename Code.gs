@@ -11,6 +11,9 @@ var types = ['redmine', 'Gitlab', 'LDAP'];
 var typesColumns = ["A1:A","C1:C","E1:E"];
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+bgSucess = '#87b798';
+bgError = '#c04000';
+
 //Locate the last line occupied
 function findLine(inp){
   var inputType = findColumn(inp);
@@ -20,7 +23,7 @@ function findLine(inp){
   //number of used lines
   var last = aVals.filter(String).length;  
   var ui = SpreadsheetApp.getUi();
-  //ui.alert(Alast); https://script.google.com/a/smdh.org/macros/d/MGMZ_wZpazxY3hT2SOBwFgi7RkztxW3XY/gwt/clear.cache.gif
+  //ui.alert(Alast);
   return last;
 }
 
@@ -31,7 +34,7 @@ function findColumn(inp){
 }
 
 //Always knows the right things
-function writeTable(type, data, texto){
+function writeTable(type, data, texto, note){
   var sheet = SpreadsheetApp.getActive();
   var lin = (findLine(type)+1).toString();
   //sheet.toast(col+a, type);
@@ -39,7 +42,16 @@ function writeTable(type, data, texto){
   var col2=alphabet[alphabet.indexOf(col1)+1];
   sheet.getRange(col1+lin).setValue(data);
   sheet.getRange(col2+lin).setValue(texto);
+  sheet.getRange(col2+lin).setNote(note);
   sheet.getRange('w1').setValue('');
+  
+  if (texto.search('0') != -1){
+    sheet.getRange(col2+lin).setBackground(bgSucess);
+  }
+  else{
+    sheet.getRange(col2+lin).setBackground(bgError);
+  }
+  
   var stop='';
   return;
 }
@@ -117,12 +129,14 @@ function mailParser(){
   var body = [];
   var data = [];
   var type = [];
-  var out = [data,type,body];
+  var note = [];
+  var out = [data,type,body,note];
   
   for (var i = 0 ; i < emails.length; i+=2) {
     type.push(emails[i].split('-')[0]);
     data.push(emails[i].split('-')[1]);
     body.push(mailAttachParser(emails[i+1]));
+    note.push(emails[i+1]);
   }
   return out;
 }
@@ -139,15 +153,15 @@ function readMailSetTable(){
   var body = '';
   var data = '';
   var type = '';
+  var note = '';
   for (var i = 0 ; i < mailContents[0].length; i++) {
     body = mailContents[2][i];
     data = mailContents[0][i];
     type = mailContents[1][i];
-    writeTable(type,data,body);
+    note = mailContents[3][i];
+    writeTable(type,data,body,note);
     var s='';
   }
-  
-  
 }
 
 /**
