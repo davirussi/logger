@@ -7,7 +7,7 @@
 
 //Globals
 var input = 'ldap';
-var types = ['redmine', 'gitlab', 'ldap'];
+var types = ['redmine', 'Gitlab', 'LDAP'];
 var typesColumns = ["A1:A","C1:C","E1:E"];
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -18,9 +18,9 @@ function findLine(inp){
   //all values from collumn 
   var aVals = sheet.getRange(inputType).getValues();
   //number of used lines
-  var last = Avals.filter(String).length;  
+  var last = aVals.filter(String).length;  
   var ui = SpreadsheetApp.getUi();
-  //ui.alert(Alast); 
+  //ui.alert(Alast); https://script.google.com/a/smdh.org/macros/d/MGMZ_wZpazxY3hT2SOBwFgi7RkztxW3XY/gwt/clear.cache.gif
   return last;
 }
 
@@ -39,6 +39,9 @@ function writeTable(type, data, texto){
   var col2=alphabet[alphabet.indexOf(col1)+1];
   sheet.getRange(col1+lin).setValue(data);
   sheet.getRange(col2+lin).setValue(texto);
+  sheet.getRange('w1').setValue('');
+  var stop='';
+  return;
 }
 
 function readRows() {
@@ -114,13 +117,14 @@ function mailParser(){
   var body = [];
   var data = [];
   var type = [];
+  var out = [data,type,body];
   
   for (var i = 0 ; i < emails.length; i+=2) {
     type.push(emails[i].split('-')[0]);
     data.push(emails[i].split('-')[1]);
     body.push(mailAttachParser(emails[i+1]));
   }
-  var tes2 = [];    
+  return out;
 }
 
 function main(){
@@ -128,6 +132,22 @@ function main(){
   var texto='0errors';
   //writeTable(input,data,texto);
   toast ='';
+}
+
+function readMailSetTable(){
+  var mailContents = mailParser();
+  var body = '';
+  var data = '';
+  var type = '';
+  for (var i = 0 ; i < mailContents[0].length; i++) {
+    body = mailContents[2][i];
+    data = mailContents[0][i];
+    type = mailContents[1][i];
+    writeTable(type,data,body);
+    var s='';
+  }
+  
+  
 }
 
 /**
@@ -143,6 +163,10 @@ function onOpen() {
   var entries = [{
     name : "Read Data ZZZZ",
     functionName : "readRows"
+  },
+   {
+    name : "readMailSetTable",
+    functionName : "readMailSetTable"
   }];
   spreadsheet.addMenu("Script Center Menu", entries);
 };
