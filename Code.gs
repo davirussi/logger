@@ -22,14 +22,11 @@ function findLine(inp){
   var aVals = sheet.getRange(inputType).getValues();
   //number of used lines
   var last = aVals.filter(String).length;  
-  var ui = SpreadsheetApp.getUi();
-  //ui.alert(Alast);
   return last;
 }
 
 //Locate the right collumn
 function findColumn(inp){
-  //var out = typesColumns[types.indexOf(inp)];
   return typesColumns[types.indexOf(inp)];
 }
 
@@ -56,28 +53,6 @@ function writeTable(type, data, texto, note){
   return;
 }
 
-function readRows() {
-  var input = 'redmine';
-  var types = ['redmine', 'gitlab', 'ldap'];
-  var columns = ["A1:A","C1:C","E1:E"];
-  var inputType = columns[types.indexOf(input)];
-  var sheet = SpreadsheetApp.getActiveSheet();
-  //all values from collumn 
-  var Avals = sheet.getRange(inputType).getValues();
-  //number of used lines
-  var Alast = Avals.filter(String).length;
-  var rows = sheet.getRange(3,1,1,2);
-  var numRows = rows.getNumRows();
-  var values = rows.getValues();
-  var ui = SpreadsheetApp.getUi();
-  
-  for (var i = 0; i <= numRows - 1; i++) {
-    var row = values[i];
-    Logger.log(row);
-  }
-  ui.alert(Alast);
-};
-
 //get attachments, get contend of attached files, returning a vector with email subject and attached files as text
 function getAttachment(){
    // Logs information about any attachments in the first 100 inbox threads.
@@ -99,11 +74,10 @@ function getAttachment(){
       }
     }
   }
-  //var sheet = SpreadsheetApp.getActive();
-  //sheet.toast('toast', out);
   return out;
 }
 
+//this function call all the functions =]
 function mailAttachParser(emails){
   var tes=[];
   var out ='';
@@ -139,13 +113,6 @@ function mailParser(){
     note.push(emails[i+1]);
   }
   return out;
-}
-
-function main(){
-  var data='23/23';
-  var texto='0errors';
-  //writeTable(input,data,texto);
-  toast ='';
 }
 
 function readMailSetTable(){
