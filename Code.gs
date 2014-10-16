@@ -29,11 +29,12 @@ function findLine(inp){
 
 //Locate the right collumn
 function findColumn(inp){
+  //var out = typesColumns[types.indexOf(inp)];
   return typesColumns[types.indexOf(inp)];
 }
- 
+
 //Always knows the right things
-function writer(type, data, texto){
+function writeTable(type, data, texto){
   var sheet = SpreadsheetApp.getActive();
   var lin = (findLine(type)+1).toString();
   //sheet.toast(col+a, type);
@@ -42,10 +43,8 @@ function writer(type, data, texto){
   sheet.getRange(col1+lin).setValue(data);
   sheet.getRange(col2+lin).setValue(texto);
 }
- 
+
 function readRows() {
-  
-  
   var input = 'redmine';
     
   var types = ['redmine', 'gitlab', 'ldap'];
@@ -77,11 +76,10 @@ function readRows() {
   
 };
 
-
 //get attachments, get contend of attached files, returning a vector with email subject and attached files as text
-function getattachment(){
+function getAttachment(){
    // Logs information about any attachments in the first 100 inbox threads.
-  var threads = GmailApp.getInboxThreads(0, 10);
+  var threads = GmailApp.getInboxThreads(0, 20);
   var msgs = GmailApp.getMessagesForThreads(threads);
   var out = [];  
   for (var i = 0 ; i < msgs.length; i++) {
