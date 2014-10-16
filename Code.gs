@@ -14,13 +14,11 @@ var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 //Locate the last line occupied
 function findLine(inp){
   var inputType = findColumn(inp);
-
   var sheet = SpreadsheetApp.getActiveSheet();
   //all values from collumn 
   var aVals = sheet.getRange(inputType).getValues();
   //number of used lines
   var last = Avals.filter(String).length;  
-
   var ui = SpreadsheetApp.getUi();
   //ui.alert(Alast); 
   return last;
@@ -45,18 +43,14 @@ function writeTable(type, data, texto){
 
 function readRows() {
   var input = 'redmine';
-    
   var types = ['redmine', 'gitlab', 'ldap'];
   var columns = ["A1:A","C1:C","E1:E"];
-  
   var inputType = columns[types.indexOf(input)];
-  
   var sheet = SpreadsheetApp.getActiveSheet();
   //all values from collumn 
   var Avals = sheet.getRange(inputType).getValues();
   //number of used lines
   var Alast = Avals.filter(String).length;
-  
   var rows = sheet.getRange(3,1,1,2);
   var numRows = rows.getNumRows();
   var values = rows.getValues();
@@ -67,12 +61,6 @@ function readRows() {
     Logger.log(row);
   }
   ui.alert(Alast);
-  
-  //find collumn 
-  //for (var i=0; i < types.length ; i++ ) {
-  //  ui.alert(types[i]);  
-  //}
-  
 };
 
 //get attachments, get contend of attached files, returning a vector with email subject and attached files as text
@@ -81,6 +69,7 @@ function getAttachment(){
   var threads = GmailApp.getInboxThreads(0, 20);
   var msgs = GmailApp.getMessagesForThreads(threads);
   var out = [];  
+  
   for (var i = 0 ; i < msgs.length; i++) {
     if (msgs[i][0].isUnread()){
       for (var j = 0; j < msgs[i].length; j++) {
@@ -117,7 +106,6 @@ function mailAttachParser(emails){
     else{
       out = 'Problem with backup';
     }
-  
   return out;
 }
 
@@ -132,10 +120,8 @@ function mailParser(){
     data.push(emails[i].split('-')[1]);
     body.push(mailAttachParser(emails[i+1]));
   }
-  var tes2 = [];  
-  
+  var tes2 = [];    
 }
-
 
 function main(){
   var data='23/23';
