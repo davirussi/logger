@@ -13,6 +13,7 @@ var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 bgSucess = '#87b798';
 bgError = '#c04000';
+bgData = '#fde7be';
 
 //Locate the last line occupied
 function findLine(inp){
@@ -42,6 +43,7 @@ function writeTable(type, data, texto, note){
   sheet.getRange(col2+lin).setNote(note);
   sheet.getRange('w1').setValue('');
   
+  sheet.getRange(col1+lin).setBackground(bgData);
   if (texto.search('0') != -1){
     sheet.getRange(col2+lin).setBackground(bgSucess);
   }
@@ -116,6 +118,8 @@ function mailParser(){
 }
 
 function readMailSetTable(){
+  var sheet = SpreadsheetApp.getActive();
+  sheet.toast('Reading mails', 'Now');  
   var mailContents = mailParser();
   var body = '';
   var data = '';
@@ -131,6 +135,18 @@ function readMailSetTable(){
   }
 }
 
+function changeGreen(){
+  var sheet = SpreadsheetApp.getActive();
+  sheet.toast('Changing color to green', 'Now');    
+  sheet.getActiveCell().setBackground(bgSucess);
+}
+
+function changeRed(){
+  var sheet = SpreadsheetApp.getActive();
+  sheet.toast('Changing color to red', 'Now');    
+  sheet.getActiveCell().setBackground(bgError);
+}
+
 /**
  * Adds a custom menu to the active spreadsheet, containing a single menu item
  * for invoking the readRows() function specified above.
@@ -142,12 +158,16 @@ function readMailSetTable(){
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var entries = [{
-    name : "Read Data ZZZZ",
-    functionName : "readRows"
-  },
-   {
     name : "readMailSetTable",
     functionName : "readMailSetTable"
+  },
+                 {
+    name : "Change to green",
+    functionName : "changeGreen"
+  },
+                {
+    name : "Change to red",
+    functionName : "changeRed"
   }];
-  spreadsheet.addMenu("Script Center Menu", entries);
+  spreadsheet.addMenu("SMDH LOGGER", entries);
 };
