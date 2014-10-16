@@ -4,13 +4,12 @@
  * For more information on using the Spreadsheet API, see
  * https://developers.google.com/apps-script/service_spreadsheet
  */
- 
+
 //Globals
 var input = 'ldap';
 var types = ['redmine', 'gitlab', 'ldap'];
 var typesColumns = ["A1:A","C1:C","E1:E"];
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
 
 //Locate the last line occupied
 function findLine(inp){
@@ -101,10 +100,48 @@ function getAttachment(){
   return out;
 }
 
+function mailAttachParser(emails){
+  var tes=[];
+  var out ='';
+  var aux=0;
+
+  if (emails.search('Errors')!=-1){
+      while (emails.search('Errors')!=-1)
+      {
+        tes.push(emails.substr(emails.search('Errors')+7,1));
+        aux=aux+parseInt(emails.substr(emails.search('Errors')+7,1));
+        emails=emails.substr(emails.search('Errors')+8,emails.length-emails.search('Errors')+8);
+      }
+      out=aux.toString();
+    }
+    else{
+      out = 'Problem with backup';
+    }
+  
+  return out;
+}
+
+function mailParser(){
+  var emails = getAttachment();
+  var body = [];
+  var data = [];
+  var type = [];
+  
+  for (var i = 0 ; i < emails.length; i+=2) {
+    type.push(emails[i].split('-')[0]);
+    data.push(emails[i].split('-')[1]);
+    body.push(mailAttachParser(emails[i+1]));
+  }
+  var tes2 = [];  
+  
+}
+
+
 function main(){
-  data='23/23';
-  texto='0errors';
-  writer(input,data,texto);
+  var data='23/23';
+  var texto='0errors';
+  //writeTable(input,data,texto);
+  toast ='';
 }
 
 /**
