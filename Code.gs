@@ -1,8 +1,6 @@
-/**
- * Retrieves all the rows in the active spreadsheet that contain data and logs the
- * values for each row.
- * For more information on using the Spreadsheet API, see
- * https://developers.google.com/apps-script/service_spreadsheet
+ /*
+  *Linux command:
+  *mutt -s "Gitlab-$(date +%D)" logger@dominio -a nomelog.log < /dev/null
  */
 
 //Globals
@@ -26,7 +24,7 @@ function findLine(inp){
   return last;
 }
 
-//Locate the right collumn
+//Locate the right collumn to start writing
 function findColumn(inp){
   return typesColumns[types.indexOf(inp)];
 }
@@ -50,8 +48,6 @@ function writeTable(type, data, texto, note){
   else{
     sheet.getRange(col2+lin).setBackground(bgError);
   }
-  
-  var stop='';
   return;
 }
 
@@ -79,7 +75,8 @@ function getAttachment(){
   return out;
 }
 
-//this function call all the functions =]
+//this function parse the attachments, in order to discovery if some error happened during the backups
+//bassically the function seeks for errors inside the logs, if the term "errors" is not present, the backup failed because conectivity 
 function mailAttachParser(emails){
   var tes=[];
   var out ='';
@@ -100,6 +97,9 @@ function mailAttachParser(emails){
   return out;
 }
 
+/** This function just returns vectors eith the important parts of the emails
+ * out = [data,type,body,note];
+ */
 function mailParser(){
   var emails = getAttachment();
   var body = [];
@@ -117,6 +117,7 @@ function mailParser(){
   return out;
 }
 
+//this function will be called from the spreeadshet interface, mainly it will call other functions to write the values inside the table
 function readMailSetTable(){
   var sheet = SpreadsheetApp.getActive();
   sheet.toast('Reading mails', 'Now');  
@@ -133,14 +134,17 @@ function readMailSetTable(){
     writeTable(type,data,body,note);
     var s='';
   }
+  sheet.toast('No more mails to read', 'Now');  
 }
 
+//this function will be called from the spreeadshet interface
 function changeGreen(){
   var sheet = SpreadsheetApp.getActive();
   sheet.toast('Changing color to green', 'Now');    
   sheet.getActiveCell().setBackground(bgSucess);
 }
 
+//this function will be called from the spreeadshet interface
 function changeRed(){
   var sheet = SpreadsheetApp.getActive();
   sheet.toast('Changing color to red', 'Now');    
