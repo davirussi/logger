@@ -8,10 +8,19 @@ var input = 'ldap';
 var types = ['redmine', 'Gitlab', 'LDAP'];
 var typesColumns = ["A1:A","C1:C","E1:E"];
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+var adminMail = ['teste@dominio'];
+var mailReport = 1; //0 not send - 1 send
 
 bgSucess = '#87b798';
 bgError = '#c04000';
 bgData = '#fde7be';
+
+//function to report backup problem to admin
+function sendMail(subject,message){
+  for (var i = 0; i < adminMail.length; i++) {
+    MailApp.sendEmail(adminMail[i], subject, message);
+  }
+}
 
 //Locate the last line occupied
 function findLine(inp){
@@ -47,6 +56,9 @@ function writeTable(type, data, texto, note){
   }
   else{
     sheet.getRange(col2+lin).setBackground(bgError);
+    if (mailReport == 1){
+      sendMail(type+' '+texto,note)
+    }
   }
   return;
 }
@@ -159,7 +171,7 @@ function changeRed(){
  * For more information on using the Spreadsheet API, see
  * https://developers.google.com/apps-script/service_spreadsheet
  */
-function onOpen() {
+function onOpen(){
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var entries = [{
     name : "readMailSetTable",
