@@ -5,11 +5,12 @@
 
 //Globals
 var input = 'ldap';
-var types = ['redmine', 'Gitlab', 'LDAP'];
+var types = ['Redmine', 'Gitlab', 'LDAP'];
 var typesColumns = ["A1:A","C1:C","E1:E"];
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-var adminMail = ['teste@dominio'];
+var adminMail = ['teste@smdh.org'];
 var mailReport = 1; //0 not send - 1 send
+var markMailAsRead = 1; //0 not mark - 1 to mark
 
 bgSucess = '#87b798';
 bgError = '#c04000';
@@ -77,7 +78,9 @@ function getAttachment(){
         for (var k = 0; k < attachments.length; k++) {
           Logger.log('Message "%s" contains the attachment "%s" (%s bytes)',
                      msgs[i][j].getSubject(), attachments[k].getName(), attachments[k].getDataAsString());
-          //msgs[i][j].markRead();
+          if (markMailAsRead==1){
+            msgs[i][j].markRead();
+          }
           out.push(msgs[i][j].getSubject());
           out.push(attachments[k].getDataAsString());
         }
