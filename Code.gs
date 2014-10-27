@@ -107,7 +107,10 @@ function mailAttachParser(emails){
       out=aux.toString();
     }
     else{
-      out = 'Problem with backup';
+      if (emails.search('impossible')!=-1)
+        out = 'Backup permissions problem?'
+      else
+        out = 'Problem with backup, ssh?';
     }
   return out;
 }
